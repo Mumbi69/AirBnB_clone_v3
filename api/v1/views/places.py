@@ -9,10 +9,12 @@ from models.user import User
 from models.state import State
 from models.amenity import Amenity
 
+
 def create_response(data, status_code=200):
     response = make_response(jsonify(data), status_code)
     response.headers["Content-Type"] = "application/json"
     return response
+
 
 @app_views.route("/cities/<id>/places", methods=["GET"])
 def get_places(id):
@@ -22,12 +24,14 @@ def get_places(id):
     places = [place.to_dict() for place in city.places]
     return create_response(places)
 
+
 @app_views.route("/places/<id>", methods=["GET"])
 def get_place(id):
     place = storage.get(Place, id)
     if not place:
         abort(404)
     return create_response(place.to_dict())
+
 
 @app_views.route("/places/<id>", methods=["DELETE"])
 def delete_place(id):
@@ -37,6 +41,7 @@ def delete_place(id):
     storage.delete(place)
     storage.save()
     return create_response({})
+
 
 @app_views.route("/cities/<id>/places", methods=["POST"])
 def post_place(id):
@@ -65,6 +70,7 @@ def post_place(id):
     place.save()
     return create_response(place.to_dict(), 201)
 
+
 @app_views.route("/places/<place_id>", methods=["PUT"])
 def put_place(place_id):
     place = storage.get(Place, place_id)
@@ -82,6 +88,7 @@ def put_place(place_id):
 
     storage.save()
     return create_response(place.to_dict())
+
 
 @app_views.route('/places_search', methods=['POST'])
 def places_search_enhanced():
@@ -113,7 +120,9 @@ def places_search_enhanced():
 
     for amenity_id in amenities:
         amenity = storage.get(Amenity, amenity_id)
-        placesList = [place for place in placesList if amenity in place.amenities]
+        placesList = [
+                place for place in placesList if amenity in place.amenities
+                ]
 
     places = [place.to_dict() for place in placesList]
     for place in places:
