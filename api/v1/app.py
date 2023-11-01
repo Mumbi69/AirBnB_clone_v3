@@ -2,11 +2,13 @@
 """ Api module """
 from api.v1.views import app_views
 from flask import Flask, jsonify
+from flask_cors import CORS
 from models import storage
 import json
 import os
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "0.0.0.0"}})
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
